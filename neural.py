@@ -136,28 +136,51 @@ def calculate_out(neuron,row):
 
 
 activation=[0]*number_neurons
+feedback=[0]*number_neurons
+
 #neural network
-# while epoch<500 and accuracy<0.99:
+epoch=0
+# and accuracy<0.99
+while epoch<500 :
     
-#     true=0
     
     #each instance 
-for i in range(0,1):
+    for i in range(0,1):
         
         row=training_df.iloc[i].to_numpy()
+        #calculating out_k for each neuron in the hidden layer
         for neuron in range(len(neural_network[0])):
             
             activation[neuron]=calculate_out(neural_network[0][neuron],row)
+        
+        #calculating out_o for the output neuron
+        out_o=calculate_out(neural_network[1][0],activation)
 
-# print("This is activation")
-# print(activation)
-# print(len(activation))
+        #calculating the error of the neural network's prediction
+        error=row[0]-out_o
 
-# print("-----")
-# print(neural_network)
 
-out_o=calculate_out(neural_network[1][0],activation)
-error=row[0]-out_o
+        #calculating feedbacks for the neurons to understand their responsibility in error
+
+        feedback_output=out_o*(1-out_o)*error
+
+        for neuron in range(len(neural_network[0])):
+            feedback[neuron]=activation[neuron] * (1-activation[neuron])* neural_network[1][0][neuron]
+
+        
+
+
+
+
+        # print("This is out_o:",out_o)
+        # print("This is row",row)
+        # print(error)
+
+
+
+        break
+    break
+
 print("This is error",error)
 
 # print(out_o)
