@@ -112,7 +112,7 @@ for i in range(number_neurons):
 neuron=[]
 
 #assigning random weights to output layer
-for j in range(len(columnnames)):
+for j in range(number_neurons):
     new_weight = random.uniform(-0.1, 0.1)
     neuron.append(new_weight)
 neural_network[1].append(neuron)
@@ -127,12 +127,6 @@ def calculate_out(neuron,row):
     out = 1/(1+math.exp(-net))
     return out
 
-
-
-
-
-
-# print(neural_network)
 
 
 activation=[0]*number_neurons
@@ -172,9 +166,9 @@ while epoch<500 :
 
 
 
-        # print("This is out_o:",out_o)
-        # print("This is row",row)
-        # print(error)
+        print("This is out_o:",out_o)
+        print("This is row",row)
+        print(error)
 
 
 
@@ -183,7 +177,7 @@ while epoch<500 :
 
 print("This is error",error)
 
-# print(out_o)
+print(out_o)
         
         
     #     list_weights[0] = list_weights[0] - (learning_rate * (-1 * sigmoid * (1-sigmoid) * (row[0]-sigmoid)))
