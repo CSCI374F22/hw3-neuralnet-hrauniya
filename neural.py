@@ -1,6 +1,6 @@
 """
 @author:Harsha Rauniyar and Austin Alcancia
-implementing the logistic regression algorithm
+implementing the neural network algorithm
 """
 
 from enum import unique
@@ -133,13 +133,15 @@ activation=[0]*number_neurons
 feedback=[0]*number_neurons
 
 #neural network
+accuracy=0
 epoch=0
 # and accuracy<0.99
-while epoch<500 :
+while epoch<500 and accuracy<0.99:
     
-    
+    true=0
+
     #each instance 
-    for i in range(0,1):
+    for i in range(len(training_df)):
         
         row=training_df.iloc[i].to_numpy()
         #calculating out_k for each neuron in the hidden layer
@@ -160,107 +162,37 @@ while epoch<500 :
 
         for neuron in range(len(neural_network[0])):
             feedback[neuron]=activation[neuron] * (1-activation[neuron])* neural_network[1][0][neuron]
-
         
+        #print(neural_network[1][0])
 
+        #update weights for output neuron
+        for neuron in range(len(neural_network[1][0])):
+            neural_network[1][0][neuron]=neural_network[1][0][neuron]-learning_rate*(-activation[neuron]*feedback_output)
 
+        #print("after weight update")
+        #print(neural_network[1][0])
 
+        #update weights for each neuron k
+        for neuron in range(len(neural_network[0])):
+            for weight in range(len(neural_network[0][neuron])):
+                neural_network[0][neuron][weight]=neural_network[0][neuron][weight]-learning_rate*(-row[0]*feedback[neuron])
 
-        print("This is out_o:",out_o)
-        print("This is row",row)
-        print(error)
+    for i in range(len(validation_df)):
 
-
-
-        break
-    break
-
-print("This is error",error)
-
-print(out_o)
+        row=validation_df.iloc[i].to_numpy()
+        #calculating out_k for each neuron in the hidden layer
+        for neuron in range(len(neural_network[0])):
+            activation[neuron]=calculate_out(neural_network[0][neuron],row)
         
-        
-    #     list_weights[0] = list_weights[0] - (learning_rate * (-1 * sigmoid * (1-sigmoid) * (row[0]-sigmoid)))
-    #     for x in range(1, len(row)):
-    #         list_weights[x] = list_weights[x] - (learning_rate * (-row[x] * sigmoid * (1-sigmoid) * (row[0]-sigmoid)))
+        #calculating out_o for the output neuron
+        out_o=calculate_out(neural_network[1][0],activation)
+        print(out_o)
+        if out_o >= threshold:
+            true+=1
 
-    # for i in range(len(validation_df)):
-    #     row=validation_df.iloc[i].to_numpy()
-        
-    #     net = calculate_net(row)
-    #     sigmoid = 1/(1+math.exp(-net))
-    #     if round(sigmoid) == row[0]:
-    #         true+=1
-
-    # accuracy = true/len(validation_df)
-    
-    # epoch+=1
-
-# #calculating net from weights
-# def calculate_net(row):
-#     net = list_weights[0]
-#     for i in range(1, len(list_weights)):
-#         net = net + (row[i]*list_weights[i])
-#     return net
+    accuracy = true/len(validation_df)
+    print(accuracy)
+    epoch+=1
 
 
-
-
-# all_unique = dataframe[dataframe.columns[0]].unique()
-
-
-# # create 2d confusion matrix (2d array)
-# twolist = []
-# place_dict = {}
-
-# for x in range(len(all_unique)):
-#     newlist=[]
-#     for y in range(len(all_unique)):
-#         newlist.append(0)
-#     twolist.append(newlist)
-
-# # get position of all labels and store in dictionary
-# for x in range(len(all_unique)):
-#     place_dict[all_unique[x]] = x
-
-# 3d_array = [[],[],[]]
-# accuracy=0
-# epoch = 0
-# # accuracylist=[]
-
-
-    
-
-# for i in range(len(test_df)):
-#     row=test_df.iloc[i].to_numpy()
-#     net = calculate_net(row)
-#     sigmoid = 1/(1+math.exp(-net))
-
-#     # increment confusion matrix
-#     column = place_dict[round(sigmoid)]
-#     row = place_dict[row[0]]
-#     twolist[column][row]+=1
-
-
-
-# # create file name
-# length = len(dataset)
-# abrev = dataset[0:length-4]
-# name = "results-" + abrev + "_" + str(learning_rate) + "r_" + str(random_seed) + ".csv"
-
-# final_labels = all_unique
-# final_labels = final_labels.tolist()
-# final_labels.append("")
-
-# # create new csv file
-# with open(name, 'w', newline='') as newfile:
-#     # initialize csv
-#     write = csv.writer(newfile)
-#     write.writerow(final_labels)
-#     count=0
-#     # write each row to csv
-#     for row in twolist:
-#         row.append(all_unique[count])
-#         write.writerow(row)
-#         count+=1       
 
