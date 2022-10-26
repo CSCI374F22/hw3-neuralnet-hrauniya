@@ -21,6 +21,8 @@ random_seed= int(sys.argv[5])
 threshold=float(sys.argv[6])
 dataset=sys.argv[1]
 
+random.seed(random_seed)
+
 #initialize dataframe
 dataframe=pd.read_csv(sys.argv[1])
 
@@ -130,6 +132,7 @@ def calculate_out(neuron,row):
 
 
 activation=[0]*number_neurons
+activation1=[0]*number_neurons
 feedback=[0]*number_neurons
 
 #neural network
@@ -152,6 +155,7 @@ while epoch<500 and accuracy<0.99:
         #calculating out_o for the output neuron
         out_o=calculate_out(neural_network[1][0],activation)
 
+        #print(len(activation))
         #calculating the error of the neural network's prediction
         error=row[0]-out_o
 
@@ -166,28 +170,32 @@ while epoch<500 and accuracy<0.99:
         #print(neural_network[1][0])
 
         #update weights for output neuron
-        for neuron in range(len(neural_network[1][0])):
+        neural_network[1][0][0]=neural_network[1][0][0]-learning_rate*(-1*feedback_output)
+
+        for neuron in range(1,len(neural_network[1][0])):
             neural_network[1][0][neuron]=neural_network[1][0][neuron]-learning_rate*(-activation[neuron]*feedback_output)
 
         #print("after weight update")
         #print(neural_network[1][0])
 
         #update weights for each neuron k
+        
         for neuron in range(len(neural_network[0])):
-            for weight in range(len(neural_network[0][neuron])):
-                neural_network[0][neuron][weight]=neural_network[0][neuron][weight]-learning_rate*(-row[0]*feedback[neuron])
+            neural_network[0][neuron][0]=neural_network[0][neuron][0]-learning_rate*(-1*feedback[neuron])
+            for weight in range(1,len(neural_network[0][neuron])):
+                neural_network[0][neuron][weight]=neural_network[0][neuron][weight]-learning_rate*(-row[weight]*feedback[neuron])
 
     for i in range(len(validation_df)):
 
         row=validation_df.iloc[i].to_numpy()
         #calculating out_k for each neuron in the hidden layer
         for neuron in range(len(neural_network[0])):
-            activation[neuron]=calculate_out(neural_network[0][neuron],row)
-        
+            activation1[neuron]=calculate_out(neural_network[0][neuron],row)
+
         #calculating out_o for the output neuron
-        out_o=calculate_out(neural_network[1][0],activation)
+        out_o=calculate_out(neural_network[1][0],activation1)
         print(out_o)
-        if out_o >= threshold:
+        if round(out_o) == row[0]:
             true+=1
 
     accuracy = true/len(validation_df)
