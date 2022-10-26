@@ -147,6 +147,7 @@ while epoch<500 and accuracy<0.99:
     for i in range(len(training_df)):
         
         row=training_df.iloc[i].to_numpy()
+        
         #calculating out_k for each neuron in the hidden layer
         for neuron in range(len(neural_network[0])):
             
@@ -159,13 +160,17 @@ while epoch<500 and accuracy<0.99:
         #calculating the error of the neural network's prediction
         error=row[0]-out_o
 
+        # print("This is activation",activation)
+        # print("This is out_o",out_o)
+        # print("This is error",error)
+
 
         #calculating feedbacks for the neurons to understand their responsibility in error
 
         feedback_output=out_o*(1-out_o)*error
 
         for neuron in range(len(neural_network[0])):
-            feedback[neuron]=activation[neuron] * (1-activation[neuron])* neural_network[1][0][neuron]
+            feedback[neuron]=activation[neuron] * (1-activation[neuron])* neural_network[1][0][neuron]*feedback_output
         
         #print(neural_network[1][0])
 
@@ -194,12 +199,17 @@ while epoch<500 and accuracy<0.99:
 
         #calculating out_o for the output neuron
         out_o=calculate_out(neural_network[1][0],activation1)
-        print(out_o)
-        if round(out_o) == row[0]:
+        # print(out_o)
+        if out_o >= threshold:
+            predicted=1
+        else:
+            predicted=0
+        
+        if predicted==row[0]:
             true+=1
 
-    accuracy = true/len(validation_df)
-    print(accuracy)
+        accuracy = true/len(validation_df)
+    print("This is accuracy",accuracy)
     epoch+=1
 
 
