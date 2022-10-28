@@ -114,12 +114,19 @@ for i in range(number_neurons):
 neuron=[]
 
 #assigning random weights to output layer
-for j in range(number_neurons):
+for j in range(number_neurons+1):
     new_weight = random.uniform(-0.1, 0.1)
     neuron.append(new_weight)
 neural_network[1].append(neuron)
 
-def calculate_out(neuron,row):
+print(len(columnnames))
+print("This is the size of one neuron in the hidden layer",len(neural_network[0][1]))
+
+print("This is the the number of hidden neurons",number_neurons)
+print(len(neural_network[1][0]))
+
+
+def calculate_outk(neuron,row):
     net = neuron[0]
     for i in range(1, len(neuron)):
         # print(row[i])
@@ -129,7 +136,12 @@ def calculate_out(neuron,row):
     out = 1/(1+math.exp(-net))
     return out
 
-
+def calculate_outo(neuron,activation):
+    net=neuron[0]
+    for i in range(1,len(neuron)):
+        net=net+(activation[i-1]*neuron[i])
+    out=1/(1+math.exp(-net))
+    return out
 
 activation=[0]*number_neurons
 activation1=[0]*number_neurons
@@ -151,10 +163,10 @@ while epoch<500 and accuracy<0.99:
         #calculating out_k for each neuron in the hidden layer
         for neuron in range(len(neural_network[0])):
             
-            activation[neuron]=calculate_out(neural_network[0][neuron],row)
+            activation[neuron]=calculate_outk(neural_network[0][neuron],row)
         
         #calculating out_o for the output neuron
-        out_o=calculate_out(neural_network[1][0],activation)
+        out_o=calculate_outo(neural_network[1][0],activation)
 
         #print(len(activation))
         #calculating the error of the neural network's prediction
@@ -170,7 +182,7 @@ while epoch<500 and accuracy<0.99:
         feedback_output=out_o*(1-out_o)*error
 
         for neuron in range(len(neural_network[0])):
-            feedback[neuron]=activation[neuron] * (1-activation[neuron])* neural_network[1][0][neuron]*feedback_output
+            feedback[neuron]=activation[neuron] * (1-activation[neuron])* neural_network[1][0][neuron+1]*feedback_output
         
         #print(neural_network[1][0])
 
@@ -178,7 +190,7 @@ while epoch<500 and accuracy<0.99:
         neural_network[1][0][0]=neural_network[1][0][0]-learning_rate*(-1*feedback_output)
 
         for neuron in range(1,len(neural_network[1][0])):
-            neural_network[1][0][neuron]=neural_network[1][0][neuron]-learning_rate*(-activation[neuron]*feedback_output)
+            neural_network[1][0][neuron]=neural_network[1][0][neuron]-learning_rate*(-activation[neuron-1]*feedback_output)
 
         #print("after weight update")
         #print(neural_network[1][0])
@@ -195,10 +207,10 @@ while epoch<500 and accuracy<0.99:
         row=validation_df.iloc[i].to_numpy()
         #calculating out_k for each neuron in the hidden layer
         for neuron in range(len(neural_network[0])):
-            activation1[neuron]=calculate_out(neural_network[0][neuron],row)
+            activation1[neuron]=calculate_outk(neural_network[0][neuron],row)
 
         #calculating out_o for the output neuron
-        out_o=calculate_out(neural_network[1][0],activation1)
+        out_o=calculate_outo(neural_network[1][0],activation1)
         # print(out_o)
         if out_o >= threshold:
             predicted=1
