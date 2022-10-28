@@ -212,5 +212,3 @@ while epoch<500 and accuracy<0.99:
     print("This is accuracy",accuracy)
     epoch+=1
 
-
-
