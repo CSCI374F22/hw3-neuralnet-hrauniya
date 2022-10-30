@@ -136,6 +136,20 @@ def calculate_outk(neuron,row):
     out = 1/(1+math.exp(-net))
     return out
 
+# create 2d confusion matrix (2d array)
+all_unique = dataframe[dataframe.columns[0]].unique()
+twolist = []
+place_dict = {}
+
+for x in range(len(all_unique)):
+    newlist=[]
+    for y in range(len(all_unique)):
+        newlist.append(0)
+    twolist.append(newlist)
+
+for x in range(len(all_unique)):
+    place_dict[all_unique[x]] = x
+
 def calculate_outo(neuron,activation):
     net=neuron[0]
     for i in range(1,len(neuron)):
@@ -224,3 +238,41 @@ while epoch<500 and accuracy<0.99:
     print("This is accuracy",accuracy)
     epoch+=1
 
+for i in range(len(test_df)):
+    row=test_df.iloc[i].to_numpy()
+    #calculating out_k for each neuron in the hidden layer
+    for neuron in range(len(neural_network[0])):
+        activation1[neuron]=calculate_outk(neural_network[0][neuron],row)
+
+    #calculating out_o for the output neuron
+    out_o=calculate_outo(neural_network[1][0],activation1)
+    if out_o >= threshold:
+        predicted=1
+    else:
+        predicted=0
+
+    # increment confusion matrix
+    column = place_dict[predicted]
+    row = place_dict[row[0]]
+    twolist[column][row]+=1
+
+    # create file name
+length = len(dataset)
+abrev = dataset[0:length-4]
+name = "results_" + abrev + "_" + str(number_neurons) + "n_" + str(learning_rate) + "r_" + str(threshold) + "t_" + str(training_percentage) + "p_" + str(random_seed) + ".csv"
+
+final_labels = all_unique
+final_labels = final_labels.tolist()
+final_labels.append("")
+
+# create new csv file
+with open(name, 'w', newline='') as newfile:
+    # initialize csv
+    write = csv.writer(newfile)
+    write.writerow(final_labels)
+    count=0
+    # write each row to csv
+    for row in twolist:
+        row.append(all_unique[count])
+        write.writerow(row)
+        count+=1       
