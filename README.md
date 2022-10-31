@@ -1,12 +1,61 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-c66648af7eb3fe8bc4f294546bfd86ef473780cde1dea487d3c4ff354943c9ae.svg)](https://classroom.github.com/online_ide?assignment_repo_id=9029327&assignment_repo_type=AssignmentRepo)
-# hw3-neuralnet
-HW3: Neural Networks
+# Austin Alcancia and Harsha Rauniyar
 
-This assignment contains three data sets that are based on three publicly available benchmarks, each representing a binary classification task:
+1. 
 
-1. monks1.csv: A data set describing two classes of robots using all nominal attributes and a binary label.  This data set has a simple rule set for determining the label: if head_shape = body_shape ∨ jacket_color = red, then yes (1), else no (0). Each of the attributes in the monks1 data set are nominal.  Monks1 was one of the first machine learning challenge problems (http://www.mli.gmu.edu/papers/91-95/91-28.pdf).  This data set comes from the UCI Machine Learning Repository:  http://archive.ics.uci.edu/ml/datasets/MONK%27s+Problems
+Program input: python neural.py monks1.csv 2 0.1 0.5 2250 0.5 
 
-2. seismic.csv: A data set of measurements describing seismic activity in the earth, measured from a wall in a Polish coal mine.  The task in this data set is to predict whether there will be a high energy seismic event within the next 8 hours.  The 18 attributes have a mix of types of values: 4 are nominal attributes, and the other 14 are continuous.  The label is a 0 if there was no high energy seismic event in the next 8 hours, and a 1 if there was such an event.  This data set comes the UCI Machine Learning Repository: https://archive.ics.uci.edu/ml/datasets/seismic-bumps
+(training_set = 0.5, random_seed = 2250)
 
-3. mnist_5v8.csv: A data set of optical character recognition of numeric digits from images.  The task in this data set is to predict whether a handwritten number is a “5” or an “8”.  Each instance represents a different grayscale 28x28 pixel image of a handwritten numeric digit.  The attributes are the intensity values of the 784 pixels. Each attribute is ordinal (treat them as continuous for the purpose of this assignment).  The label is a 0 if the handwritten number is a “5”, and a 1 if the handwritten number is an “8”.  This version of MNIST contains 100 instances of the handwritten numeric digits “5” and “8”, randomly sampled from the original training data for MNIST.  The overall MNIST data set is one of the main benchmarks in machine learning: http://yann.lecun.com/exdb/mnist/.  It was converted to CSV file using the python code provided at: https://quickgrid.blogspot.com/2017/05/Converting-MNIST-Handwritten-Digits-Dataset-into-CSV-with-Sorting-and-Extracting-Labels-and-Features-into-Different-CSV-using-Python.html
+a. accuracy test set of neural network: 0.9537
 
+b. accuracy test set of logistic: 0.7222
+
+c. Confidence Interval
+
+neural network = [0.9125, 0.9949]
+
+logistic = [0.6344, 0.8010]
+
+The neural network had the highest accuracy. The difference was pretty statistically significant, since the neural network had a confidence interval from 91% to 99% while the logistic interval was only between 63% and 80% in terms of accuracy.
+
+4. 
+
+a. Five different thresholds (random seed 1000)
+
+accuracy on test set (0.05 threshold) = 0.4894
+
+accuracy on test set (0.1 threshold) = 0.7524
+
+accuracy on test set (0.5 threshold) = 0.9246
+
+accuracy on test set (0.9 threshold) = 0.9246
+
+accuracy on test set (0.95 threshold) = 0.9246
+
+As the threshold increased the overall accuracy also increased. 
+
+b. Recalls
+
+0.05 threshold:
+recall_0 = 0.4582
+recall_1 = 0.8718
+
+0.1 threshold
+recall_0 = 0.7741
+recall_1 = 0.4871
+
+0.5 threshold 
+recall_0 = 0.9246
+recall_1 = 0
+
+0.9 threshold 
+recall_0 = 0.9246
+recall_1 = 0
+
+0.95 threshold 
+recall_0 = 0.9246
+recall_1 = 0
+
+As the threshold increased, recall_0 became more accurate, however recall_1 had a drastic decrease in accuracy. This is most likely due to the predictions being under the higher thresholds, therefore recall_1 decreases as threshold increases.
+
+c. I think the threshold of 0.05 would be the best at predicting seismic events since it had the highest recall_1 at 0.87. This means that 87% of the times it predicted there would be a seismic event it was correct. The downside to this is that the overall accuracy is only 48% so there may be many false positive predictions, however its better to have a false positive than predict incorrectly. 
