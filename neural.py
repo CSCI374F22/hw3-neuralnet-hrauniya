@@ -165,6 +165,9 @@ feedback=[0]*number_neurons
 accuracy=0
 epoch=0
 # and accuracy<0.99
+
+print(place_dict)
+
 while epoch<500 and accuracy<0.99:
     
     true=0
@@ -238,6 +241,8 @@ while epoch<500 and accuracy<0.99:
     print("This is accuracy",accuracy)
     epoch+=1
 
+total = 0
+correct = 0
 for i in range(len(test_df)):
     row=test_df.iloc[i].to_numpy()
     #calculating out_k for each neuron in the hidden layer
@@ -254,8 +259,14 @@ for i in range(len(test_df)):
     # increment confusion matrix
     column = place_dict[predicted]
     row = place_dict[row[0]]
-    twolist[column][row]+=1
-
+    print("row: " + str(row) + " column: " + str(column))
+    twolist[row][column]+=1
+    print(twolist)
+    total+=1
+    if row==column:
+        correct+=1
+        
+print("accuracy test set: " + str(correct/total))
     # create file name
 length = len(dataset)
 abrev = dataset[0:length-4]
