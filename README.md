@@ -91,5 +91,3 @@ Questions
 4. 8-10 hours
 
 5. We have adhered to the Honor Code in this assignment. 
-
-We enjoyed working one the 
