@@ -118,13 +118,7 @@ for j in range(number_neurons+1):
     neuron.append(new_weight)
 neural_network[1].append(neuron)
 
-print(len(columnnames))
-print("This is the size of one neuron in the hidden layer",len(neural_network[0][1]))
-
-print("This is the the number of hidden neurons",number_neurons)
-print(len(neural_network[1][0]))
-
-
+# calculate out k function
 def calculate_outk(neuron,row):
     net = neuron[0]
     for i in range(1, len(neuron)):
@@ -146,6 +140,7 @@ for x in range(len(all_unique)):
 for x in range(len(all_unique)):
     place_dict[all_unique[x]] = x
 
+# calculate out o function
 def calculate_outo(neuron,activation):
     net=neuron[0]
     for i in range(1,len(neuron)):
@@ -223,7 +218,7 @@ while epoch<500 and accuracy<0.99:
 
 for i in range(len(test_df)):
     row=test_df.iloc[i].to_numpy()
-    
+
     #calculating out_k for each neuron in the hidden layer
     for neuron in range(len(neural_network[0])):
         activation1[neuron]=calculate_outk(neural_network[0][neuron],row)
