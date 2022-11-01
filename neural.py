@@ -100,7 +100,6 @@ for column in training_df.columns[1:]:
 
 columnnames = list(training_df.columns.values)
 
-
 neural_network = [[],[]]
 
 #assigning random weights to hidden layer
@@ -129,10 +128,7 @@ print(len(neural_network[1][0]))
 def calculate_outk(neuron,row):
     net = neuron[0]
     for i in range(1, len(neuron)):
-        # print(row[i])
-        # print(neuron[i])
         net = net + (row[i]*neuron[i])
-    # print("NET",net)
     out = 1/(1+math.exp(-net))
     return out
 
@@ -164,9 +160,6 @@ feedback=[0]*number_neurons
 #neural network
 accuracy=0
 epoch=0
-# and accuracy<0.99
-
-print(place_dict)
 
 while epoch<500 and accuracy<0.99:
     
@@ -185,14 +178,8 @@ while epoch<500 and accuracy<0.99:
         #calculating out_o for the output neuron
         out_o=calculate_outo(neural_network[1][0],activation)
 
-        #print(len(activation))
         #calculating the error of the neural network's prediction
         error=row[0]-out_o
-
-        # print("This is activation",activation)
-        # print("This is out_o",out_o)
-        # print("This is error",error)
-
 
         #calculating feedbacks for the neurons to understand their responsibility in error
 
@@ -201,16 +188,11 @@ while epoch<500 and accuracy<0.99:
         for neuron in range(len(neural_network[0])):
             feedback[neuron]=activation[neuron] * (1-activation[neuron])* neural_network[1][0][neuron+1]*feedback_output
         
-        #print(neural_network[1][0])
-
         #update weights for output neuron
         neural_network[1][0][0]=neural_network[1][0][0]-learning_rate*(-1*feedback_output)
 
         for neuron in range(1,len(neural_network[1][0])):
             neural_network[1][0][neuron]=neural_network[1][0][neuron]-learning_rate*(-activation[neuron-1]*feedback_output)
-
-        #print("after weight update")
-        #print(neural_network[1][0])
 
         #update weights for each neuron k
         
@@ -222,29 +204,26 @@ while epoch<500 and accuracy<0.99:
     for i in range(len(validation_df)):
 
         row=validation_df.iloc[i].to_numpy()
+
         #calculating out_k for each neuron in the hidden layer
         for neuron in range(len(neural_network[0])):
             activation1[neuron]=calculate_outk(neural_network[0][neuron],row)
 
         #calculating out_o for the output neuron
         out_o=calculate_outo(neural_network[1][0],activation1)
-        # print(out_o)
         if out_o >= threshold:
             predicted=1
         else:
             predicted=0
-        
         if predicted==row[0]:
             true+=1
 
-        accuracy = true/len(validation_df)
-    print("This is accuracy",accuracy)
+    accuracy = true/len(validation_df)
     epoch+=1
 
-total = 0
-correct = 0
 for i in range(len(test_df)):
     row=test_df.iloc[i].to_numpy()
+    
     #calculating out_k for each neuron in the hidden layer
     for neuron in range(len(neural_network[0])):
         activation1[neuron]=calculate_outk(neural_network[0][neuron],row)
@@ -259,15 +238,9 @@ for i in range(len(test_df)):
     # increment confusion matrix
     column = place_dict[predicted]
     row = place_dict[row[0]]
-    print("row: " + str(row) + " column: " + str(column))
     twolist[row][column]+=1
-    print(twolist)
-    total+=1
-    if row==column:
-        correct+=1
         
-print("accuracy test set: " + str(correct/total))
-    # create file name
+# create file name
 length = len(dataset)
 abrev = dataset[0:length-4]
 name = "results_" + abrev + "_" + str(number_neurons) + "n_" + str(learning_rate) + "r_" + str(threshold) + "t_" + str(training_percentage) + "p_" + str(random_seed) + ".csv"
