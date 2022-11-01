@@ -10,11 +10,11 @@ a. accuracy test set of neural network: 0.9537
 
 b. accuracy test set of logistic: 0.7222
 
-c. Confidence Interval
+c. Confidence Interval (test_set size = 108)
 
-neural network = [0.9125, 0.9949]
+neural network = [0.9141, 0.9933]
 
-logistic = [0.6344, 0.8010]
+logistic = [0.6377, 0.8070]
 
 The neural network had the highest accuracy. The difference was pretty statistically significant, since the neural network had a confidence interval from 91% to 99% while the logistic interval was only between 63% and 80% in terms of accuracy.
 
