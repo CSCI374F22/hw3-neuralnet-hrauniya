@@ -1,5 +1,6 @@
 # Neural Network Experiments
-Building a single layer artificial neural network with backpropagation algorithm.
+Building a single layer artificial neural network(ANN) with backpropagation algorithm, and experiments on datasets
+neuralnet.py contains the implementation to the ANN.
 
 ## Research Analysis
 
